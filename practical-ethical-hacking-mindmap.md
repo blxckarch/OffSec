@@ -1,2 +1,0 @@
-# Practical Ethical Hacking MindMap
-
