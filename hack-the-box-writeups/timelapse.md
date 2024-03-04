@@ -76,11 +76,11 @@ smbclient -L \\\\10.10.11.152\\ -N
 #-N = no password
 ```
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>SMB Shares Enumeration</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (17).png" alt=""><figcaption><p>SMB Shares Enumeration</p></figcaption></figure>
 
 We can see that the share named "_Shares_" stands out, so we can try connecting to it anonymously since we still don't have credentials at this point.
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption><p>Inside the SMB Share named "Shares"</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Inside the SMB Share named "Shares"</p></figcaption></figure>
 
 Inside this share, we can see two Directories, one of which ("Dev") contains a backup file. The "HelpDesk" Directory contains some LAPS (Local Administrator Password Solution) files made by Microsoft that foreshadow what's coming next but aren't of any use to us right now.
 
@@ -90,7 +90,7 @@ Inside this share, we can see two Directories, one of which ("Dev") contains a b
 
 So let's focus on the backup zipped file. If we try to unzip it, we're asked for a password:
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
 
 We can use a tool called `fcrackzip` to crack the password:
 
@@ -102,17 +102,17 @@ fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt winrm_backup.zip
 # -p = use string as initial password/file
 ```
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
 
 Now we can see the contents of the zipped file, and we'll find a `.pfx` file, which also needs a password to be unlocked:
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption><p>.pfx file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>.pfx file</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption><p>We need another password</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5) (1).png" alt=""><figcaption><p>We need another password</p></figcaption></figure>
 
 Luckily, we're able to crack this password using "`John The Ripper`". The correct tool for this job is called "`pfx2john`". This tool will [convert this encrypted file into a hash of "_john format_" we can crack afterward](https://stackoverflow.com/a/57826783):
 
-<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption><p>pfx2john turns the encrypted file into a "john format" hash</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption><p>pfx2john turns the encrypted file into a "john format" hash</p></figcaption></figure>
 
 Next, we can grab this hash and crackit using "_John_":
 
@@ -120,11 +120,11 @@ Next, we can grab this hash and crackit using "_John_":
 john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=pfx
 ```
 
-<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption><p>Cracked password with john</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (7) (1).png" alt=""><figcaption><p>Cracked password with john</p></figcaption></figure>
 
 Once we got into the `.pfx` file, we can see a Private RSA Key and an Identity:
 
-<figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption><p>Private RSA Key and Identity inside of the .pfx file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (8) (1).png" alt=""><figcaption><p>Private RSA Key and Identity inside of the .pfx file</p></figcaption></figure>
 
 After doing some research, I found out that it is possible to extract this key to use as authentication without the need for a password. This is called [Certificate-Based Authentication, which can be used to authenticate over WinRM](https://medium.com/r3d-buck3t/certificate-based-authentication-over-winrm-13197265c790).
 
@@ -140,7 +140,7 @@ openssl pkcs12 -in legacyy_dev_auth.pfx -nocerts -out rsa.key
 
 ```
 
-<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption><p>RSA Private Key decrypted</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9) (1).png" alt=""><figcaption><p>RSA Private Key decrypted</p></figcaption></figure>
 
 Now we'll need to extract the certificate:
 
@@ -154,7 +154,7 @@ openssl pkcs12 -in legacyy_dev_auth.pfx -clcerts -nokeys -out legacyy.crt
 # -out = output
 ```
 
-<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption><p>Certificate extracted</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (10) (1).png" alt=""><figcaption><p>Certificate extracted</p></figcaption></figure>
 
 ###
 
@@ -168,11 +168,11 @@ evil-winrm -S -i 10.10.11.152 -u legacyy -p [password] -c legacyy.crt -k rsa.key
 #Syntax: evil-winrm -S -i [IP] -u [user] -p [password] -c [certificate].cer -k private.key
 ```
 
-<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption><p>We have shell access</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (11) (1).png" alt=""><figcaption><p>We have shell access</p></figcaption></figure>
 
 We can find the user's flag on his Desktop:
 
-<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption><p>User's flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (12) (1).png" alt=""><figcaption><p>User's flag</p></figcaption></figure>
 
 
 
@@ -190,7 +190,7 @@ First, we can enumerate the user accounts:
 net user
 ```
 
-<figure><img src="../.gitbook/assets/image (13).png" alt=""><figcaption><p>Users discovered</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (13) (1).png" alt=""><figcaption><p>Users discovered</p></figcaption></figure>
 
 If we enumerate further and do a net user command to every user, we'll be able to see some interesting things:
 
@@ -223,7 +223,7 @@ This file can be found here:  `C:\Users\legacyy\AppData\Roaming\Microsoft\Window
 
 Here we'll be able to see the user svc\_deploy's password in plain text:
 
-<figure><img src="../.gitbook/assets/image (14).png" alt=""><figcaption><p>svc_deploy password in plain text</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (14) (1).png" alt=""><figcaption><p>svc_deploy password in plain text</p></figcaption></figure>
 
 Now we can use BloodHound ingestor's `bloodhound-python` to enumerate further:
 
@@ -247,7 +247,7 @@ sudo bloodhound
 
 On BloodHound we can select the svc\_deploy user, click on "Outbound Object Control" under "Node Info" and click on "Group Delegated Object Control". There, we'll be able to see that the members of "LAPS\_READERS" group can "Read LAPS Password".
 
-<figure><img src="../.gitbook/assets/image (15).png" alt=""><figcaption><p>BloodHound Enumeration</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (15) (1).png" alt=""><figcaption><p>BloodHound Enumeration</p></figcaption></figure>
 
 
 
@@ -259,13 +259,13 @@ If we research how to read the LAPS Password, we'll come across [this article](h
 Get-ADComputer -Filter * -Properties ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime
 ```
 
-<figure><img src="../.gitbook/assets/image (16).png" alt=""><figcaption><p>Administrator's Password in Plain Text</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (16) (1).png" alt=""><figcaption><p>Administrator's Password in Plain Text</p></figcaption></figure>
 
 Now we just need to login again to the machine as the Administrator and get the root flag.
 
 If we enumerate enough of the "Administrator" directory, we won't be able to find the flag. Since I couldn't find it in the Administrator's Desktop or other folders, I remembered from our enumeration that TRX was also a Domain Admin, so I went to his desktop and there was the root flag:
 
-<figure><img src="../.gitbook/assets/image (17).png" alt=""><figcaption><p>Root flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (17) (1).png" alt=""><figcaption><p>Root flag</p></figcaption></figure>
 
 And this was the CTF!&#x20;
 
