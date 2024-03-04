@@ -157,6 +157,8 @@ sudo bloodhound
 
 With all the data uploaded, we can try seeing if we can perform Kerberoasting in any accounts in the domain.
 
+### Exploitation
+
 A Kerberoasting attack happens when an user wants to access an Application Server and makes requests to the KDC (Key Distribution Center), A.K.A, the Domain Controller (DC). To do this, the user requests a TGT (Ticket Granting Ticket) to the Domain Controller, and receives back a TGT encrypted with a Kerberos TGT (krbtgt) hash.
 
 After that, the User will request a Ticket Granting Service (TGS) to the KDC presenting its TGT. The KDC will reply back providing the TGS encrypted with the server's account hash. This way, the Kerberoasting attack happens when we get the TGS and decrypt the server's account hash.
