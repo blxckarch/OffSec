@@ -80,7 +80,7 @@ smbclient -L \\\\10.10.11.152\\ -N
 
 We can see that the share named "_Shares_" stands out, so we can try connecting to it anonymously since we still don't have credentials at this point.
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Inside the SMB Share named "Shares"</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>Inside the SMB Share named "Shares"</p></figcaption></figure>
 
 Inside this share, we can see two Directories, one of which ("Dev") contains a backup file. The "HelpDesk" Directory contains some LAPS (Local Administrator Password Solution) files made by Microsoft that foreshadow what's coming next but aren't of any use to us right now.
 
@@ -90,7 +90,7 @@ Inside this share, we can see two Directories, one of which ("Dev") contains a b
 
 So let's focus on the backup zipped file. If we try to unzip it, we're asked for a password:
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
 
 We can use a tool called `fcrackzip` to crack the password:
 
@@ -102,11 +102,11 @@ fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt winrm_backup.zip
 # -p = use string as initial password/file
 ```
 
-<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
 
 Now we can see the contents of the zipped file, and we'll find a `.pfx` file, which also needs a password to be unlocked:
 
-<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>.pfx file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1) (1).png" alt=""><figcaption><p>.pfx file</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/image (5) (1).png" alt=""><figcaption><p>We need another password</p></figcaption></figure>
 
