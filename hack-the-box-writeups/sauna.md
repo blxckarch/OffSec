@@ -129,3 +129,11 @@ evil-winrm -i 10.10.10.175 -u fsmith -p Thestrokes23
 
 <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
 
+## Post Exploitation / Privilege Escalation
+
+### Enumeration
+
+
+
+
+
