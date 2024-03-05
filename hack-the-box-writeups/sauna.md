@@ -72,7 +72,7 @@ On Port 80, we can see a website that displays, on the "About Us" page, the name
 
 ## Exploitation
 
-We can grab these usernames and create a list with all possible usernames for everyone in the team and try to see if any of these usernames are valid. To do this, we'll use a tool called "[_Username Anarchy_](https://github.com/urbanadventurer/username-anarchy)" and create a list of usernames.
+We can grab these employees' names and create a list with all possible usernames for everyone on the team and try to see if any of these usernames are valid. To do this, we'll use a tool called "[_Username Anarchy_](https://github.com/urbanadventurer/username-anarchy)" tocreate a list of usernames.
 
 First, let's create a list with all the names we found on the website.
 
@@ -99,7 +99,7 @@ Once we have a username list, we need to make sure which of these usernames are 
 
 <figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption><p>Valid username from Kerbrute</p></figcaption></figure>
 
-Once we get a valid username, there are a few things we can try, one of them being an ASREPRoasting attack, which will [automatically find accounts that do not require pre-authentication and extract their AS-REP hashes for offline cracking](https://blog.netwrix.com/2022/11/03/cracking\_ad\_password\_with\_as\_rep\_roasting/).
+Now that we have a valid username, there are a few things we can try, one of them being an ASREPRoasting attack, which will [automatically find accounts that do not require pre-authentication, and extract their AS-REP hashes for offline cracking](https://blog.netwrix.com/2022/11/03/cracking\_ad\_password\_with\_as\_rep\_roasting/).
 
 To perform this attack, we'll need to use one of Impacket's tools, known as "_GetNPUSers.py"_:
 
@@ -147,7 +147,7 @@ bloodhound-python -d egotistical-bank.local -u fsmith -p Thestrokes23 -ns 10.10.
 
 Now we run BloodHound:
 
-```
+```bash
 sudo neo4j console
 
 sudo bloodhound
@@ -157,7 +157,7 @@ Next, we import our data into BloodHound and analyze the results:
 
 <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>hsmith is a kerberoastable account</p></figcaption></figure>
 
-Despite "_hsmith_" being a "kerberoastable" user, this account won't get us any farther due to the fact it has fewer privileges than the "_fsmith_" account.
+Despite "_hsmith_" being a "kerberoastable" user, this account won't get us any further due to the fact it has fewer privileges than the "_fsmith_" account.
 
 However, the SVC\_LOANMGR can perform a DCSync attack on the Domain Controller:
 
@@ -165,13 +165,17 @@ However, the SVC\_LOANMGR can perform a DCSync attack on the Domain Controller:
 
 So this user is high value if we're able to grab his credentials.
 
-Let's pop a shell on the target and run winPEAS on it to see if we can find anything interesting:
+Let's go back to our shell and run winPEAS on the target to see if we can find anything interesting:
 
 <figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption><p>svc_loanmanager credentials</p></figcaption></figure>
 
+We have a plain text password for the user "_svc\_loanmgr_"
+
+
+
 ### Exploitation
 
-Now that we have a valid set of credentials for the account svc\_loanmanager, we can try to perform the DCSync attack we previously found this account was able to perform.
+Now that we have a valid set of credentials for the account svc\_loanmmgr, we can try to perform the DCSync attack we previously found this account was able to do.
 
 To do this, we'll use "_secretsdump_":
 
@@ -191,9 +195,9 @@ hashcat -m 1000 hashes.txt /usr/share/wordlists/rockyou.txt
 
 <figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption><p>Hashcat couldn't crack the hash</p></figcaption></figure>
 
-As we can see, our wordlist doesn't have the password that matches this hash. So, we'll need to take a different approach. We can perform a "_Pass-The-Hash_" attack, where we don't need to provide a password to log in as the user.
+As we can see, our wordlist doesn't have the password that matches this hash. So, we'll need to take a different approach.&#x20;
 
-In this attack, instead of providing a password for login, we'll provide the Hash and still be able to login:
+We can try and perform a "_Pass-The-Hash_" attack, where we don't need to provide a password to log in as the user. In this attack, instead of providing a password for login, we'll provide the Hash and still be able to login:
 
 ```bash
 psexec.py egotistical-bank.local/administrator@10.10.10.175 -hashes aad3b435b51404eeaad3b435b51404ee:823452073d75b9d1cf70ebdf86c7f98e
