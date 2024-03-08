@@ -90,7 +90,7 @@ Inside this share, we can see two Directories, one of which ("Dev") contains a b
 
 So let's focus on the backup zipped file. If we try to unzip it, we're asked for a password:
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Password required to access the zipped file</p></figcaption></figure>
 
 We can use a tool called `fcrackzip` to crack the password:
 
@@ -102,7 +102,7 @@ fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt winrm_backup.zip
 # -p = use string as initial password/file
 ```
 
-<figure><img src="../.gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption><p>Password cracked</p></figcaption></figure>
 
 Now we can see the contents of the zipped file, and we'll find a `.pfx` file, which also needs a password to be unlocked:
 

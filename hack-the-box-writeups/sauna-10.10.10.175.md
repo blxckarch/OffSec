@@ -115,7 +115,7 @@ Now we can take this hash and try to crack it with "_hashcat_":
 hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>fsmith's password</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption><p>fsmith's password</p></figcaption></figure>
 
 ### User Flag
 
@@ -127,7 +127,7 @@ In this case, we should get a shell to be able to grab the User's flag:
 evil-winrm -i 10.10.10.175 -u fsmith -p Thestrokes23
 ```
 
-<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p>User flag</p></figcaption></figure>
 
 ## Post Exploitation / Privilege Escalation
 
@@ -155,7 +155,7 @@ sudo bloodhound
 
 Next, we import our data into BloodHound and analyze the results:
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>hsmith is a kerberoastable account</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>hsmith is a kerberoastable account</p></figcaption></figure>
 
 Despite "_hsmith_" being a "kerberoastable" user, this account won't get us any further due to the fact it has fewer privileges than the "_fsmith_" account.
 
